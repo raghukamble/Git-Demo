@@ -1,0 +1,22 @@
+pipeline {
+    agent any
+    stages {
+        stage ('Build') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+    stage ('Artifact') {
+            steps {
+                echo 'Copying Artifacts'
+                archiveArtifacts artifacts: '**/*.war'
+            }
+        }
+    stage ('Deploying to stage') {
+            steps {
+                echo 'Copying Artifacts'
+                archiveArtifacts artifacts: '**/*.war'
+            }
+        }
+    }
+}
