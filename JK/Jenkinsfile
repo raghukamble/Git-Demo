@@ -1,0 +1,53 @@
+pipeline {
+    agent any
+
+    parameters string {
+
+        string(name: 'tomcat-Dev',defaultValue:'13.20.100.10', description: 'staging server')
+        string(name: 'tomcat-Stage', defaultValue: '20.30.50.10', description: 'Prduction-server')
+    }
+
+
+    triggers {
+        pollSCM(*****)
+    }
+
+
+stages {
+    stage('Build') {
+        steps{
+            echo 'Building an Application'
+            sh 'mvn package'
+            }
+            post {
+                success {
+                    archiveArtifacts artifacts: '**/*.war'
+                    }
+
+        }
+            
+        }
+    
+stage {
+    stage(Deploying) {
+        parallel {
+            stage(Deploying to Staging) {
+                steps {
+                    sh "scp -i /home/jenkins/india.pem **/target/*.war ec2-user@$params.tomcat-Stage}:/var/lib/tomcat8/webapps"
+                }
+
+            }
+
+stage(Deploying to Production) {
+    steps {
+        sh "scp -i /home/jenkins/india.pem **/target/*.war ec2-user@$params.tomcat-Dev}:/var/lib/tomcat8/webapps"
+    }
+}
+
+                }
+            }
+
+        }
+    }
+
+}

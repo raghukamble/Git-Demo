@@ -5,7 +5,14 @@ pipeline {
             steps {
                 sh 'mvn clean package'
             }
+        post {
+            success{
+                echo 'Copying Artifacts'
+                archiveArtifacts artifacts: '**/*.war'
+            }
         }
+        
+    }
     stage ('Artifact') {
             steps {
                 echo 'Copying Artifacts'
